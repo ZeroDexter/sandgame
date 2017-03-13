@@ -1,0 +1,32 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf8">
+    <title>sandgame</title>
+    <style>
+      body {
+          margin: 0;
+          font-family: monospace;
+      }
+      canvas {
+          display: block;
+          width: 100vw;
+          height: 100vh;
+      }
+      #b {
+        position: absolute;
+        top: 10px;
+        width: 100%;
+        text-align: center;
+        z-index: 2;
+      }
+    </style>
+    <script src="twgl-full.min.js"></script>
+    <script src="renderer.js"></script>
+    <script src="game.js"></script>
+  </head>
+  <body>
+    <canvas id="c"></canvas>
+  </body>
+</html>
