@@ -28,7 +28,7 @@ const Game = {
     this.texArrs[1] = new Uint8ClampedArray(this.buffArrs[1]);
 
     for (var y = 0; y < ylen; y++) {
-      this.viewArrs[this.buffIdx][y] = ((Math.random() * 100) % 17) > 1 ? 0 : 1;
+      this.viewArrs[this.buffIdx][y] = Math.round(Math.random());
     }
 
     this.initialized = true;
@@ -47,17 +47,19 @@ const Game = {
     for (var i = xlen + 1; i < end - 1; i++){
       var px = readBuff[i],
         neighborCount = 0,
-        val = 0
+        val = 0,
+        prevPx = xlen - 1,
+        nextPx = xlen + 1,
         arrIdx = i * 4;
       
-        neighborCount += readBuff[i - xlen - 1];
+        neighborCount += readBuff[i - prevPx];
         neighborCount += readBuff[i - xlen];
-        neighborCount += readBuff[i - xlen + 1];
+        neighborCount += readBuff[i - nextPx];
         neighborCount += readBuff[i - 1];
         neighborCount += readBuff[i + 1];
-        neighborCount += readBuff[i + xlen - 1];
+        neighborCount += readBuff[i + prevPx];
         neighborCount += readBuff[i + xlen];
-        neighborCount += readBuff[i + xlen + 1];
+        neighborCount += readBuff[i + nextPx];
 
       if (neighborCount === 3 || (px && neighborCount === 2)) {
         val = 1;
