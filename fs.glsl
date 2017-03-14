@@ -5,12 +5,14 @@ uniform vec2 resolution;
 uniform float zoom;
 uniform vec2 pan;
 
-void main() {
-  vec2 dim = resolution * vec2(zoom, zoom);
-  vec2 uv = gl_FragCoord.xy / dim;
-  uv -= ((resolution - dim) * vec2(0.5, 0.5)) / dim;
-  uv += pan / dim;
-  vec4 color = texture2D(tex, uv).rgba;
+varying vec2 texCoord;
 
-  gl_FragColor = color;
+void main() {
+  // vec2 dim = resolution * vec2(zoom, zoom);
+  vec2 uv = texCoord / resolution;
+  // uv -= ((resolution - dim) * vec2(0.5, 0.5)) / dim;
+  // uv += pan / dim;
+  float color = texture2D(tex, uv).r;
+
+  gl_FragColor = vec4(color, color, color, 255);
 }

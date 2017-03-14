@@ -1,4 +1,4 @@
-const fs = require('fs');
+// const fs = require('fs');
 
 const Renderer = {
   vShader: null,
@@ -12,10 +12,11 @@ const Renderer = {
   countFPS: false,
   init: function() {
     this.gl = twgl.getWebGLContext(document.getElementById("c"));
-    this.vShader = fs.readFileSync('vs.glsl', { encoding: 'UTF-8' });
-    this.fShader = fs.readFileSync('fs.glsl', { encoding: 'UTF-8' });
+    // this.vShader = fs.readFileSync('vs.glsl', { encoding: 'UTF-8' });
+    // this.fShader = fs.readFileSync('fs.glsl', { encoding: 'UTF-8' });
 
-    this.programInfo = twgl.createProgramInfo(this.gl, [this.vShader, this.fShader]);
+    // this.programInfo = twgl.createProgramInfo(this.gl, [this.vShader, this.fShader]);
+    this.programInfo = twgl.createProgramInfo(this.gl, ["vs", "fs"]);
 
     this.vBuffer = twgl.createBufferInfoFromArrays(this.gl, {
       position: [-1, -1, 0, 1, -1, 0, -1, 1, 0, -1, 1, 0, 1, -1, 0, 1, 1, 0],
