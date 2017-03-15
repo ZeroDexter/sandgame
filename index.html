@@ -12,8 +12,8 @@
       }
       canvas {
           display: block;
-          width: 2000px;
-          height: 1000px;
+          width: 100vw;
+          height: 100vh;
       }
       #b {
         position: absolute;
@@ -47,7 +47,7 @@ void main() {
   vec2 uv = gl_FragCoord.xy / dim;
   uv -= ((resolution - dim) * vec2(0.5, 0.5)) / dim;
   uv += pan / dim;
-  float color = texture2D(tex, uv).r * 255.0;
+  float color = texture2D(tex, uv).r;
 
   gl_FragColor = vec4(color, color, color, 255);
 }

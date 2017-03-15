@@ -1,8 +1,8 @@
 const electron = require('electron');
 const path = require('path');
 const url = require('url');
-const windowWidth = 1600;
-const windowHeight = 1000;
+const windowWidth = 1900;
+const windowHeight = 800;
 
 // Module to control application life.
 const app = electron.app;
