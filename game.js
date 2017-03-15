@@ -13,22 +13,25 @@ const Game = {
   zoom: 100,
   panX: 0,
   panY: 0,
-  arr: null,
   init: function (time, dim) {
     this.lastFrame = time;
     this.w = dim[0];
     this.h = dim[1];
-    var ylen = (this.h + 2) * (this.w + 2);
-    this.buffArrs[0] = new ArrayBuffer(ylen * 4);
+    var size = (this.h + 2) * (this.w + 2);
+    this.buffArrs[0] = new ArrayBuffer(size * 4);
     this.viewArrs[0] = new Uint32Array(this.buffArrs[0]);
     this.texArrs[0] = new Uint8ClampedArray(this.buffArrs[0]);
 
-    this.buffArrs[1] = new ArrayBuffer(ylen * 4);
+    this.buffArrs[1] = new ArrayBuffer(size * 4);
     this.viewArrs[1] = new Uint32Array(this.buffArrs[1]);    
     this.texArrs[1] = new Uint8ClampedArray(this.buffArrs[1]);
 
-    for (var y = 0; y < ylen; y++) {
-      this.viewArrs[this.buffIdx][y] = Math.round(Math.random());
+    for (var y = 1; y < this.h - 1; y++) {
+      for (var x = 1; x < this.w - 1; x++) {
+        var idx = y * this.w + x;
+
+        this.viewArrs[this.buffIdx][idx] = Math.round(Math.random());
+      }
     }
 
     this.initialized = true;
@@ -36,36 +39,40 @@ const Game = {
   update: function (time, dim) {
     if (!this.initialized) this.init(time, dim);
 
-    if(this.countFPS) var t = performance.now();
+    if (this.countFPS) var t = performance.now();
+    
     var ylen = this.h,
       xlen = this.w,
-      end = ylen * xlen - xlen,
-      arr = this.arr,
       readBuff = this.viewArrs[this.buffIdx],
       writeBuff = this.viewArrs[this.buffIdx === 0 ? 1 : 0];
-
-    for (var i = xlen + 1; i < end - 1; i++){
-      var px = readBuff[i],
-        neighborCount = 0,
-        val = 0,
-        prevPx = xlen - 1,
-        nextPx = xlen + 1,
-        arrIdx = i * 4;
+    
+    for (var y = 1; y < ylen - 1; y++){
+      var thisRow = y * xlen,
+        prevRow = thisRow - xlen,
+        nextRow = thisRow + xlen;
       
-        neighborCount += readBuff[i - prevPx];
-        neighborCount += readBuff[i - xlen];
-        neighborCount += readBuff[i - nextPx];
-        neighborCount += readBuff[i - 1];
-        neighborCount += readBuff[i + 1];
-        neighborCount += readBuff[i + prevPx];
-        neighborCount += readBuff[i + xlen];
-        neighborCount += readBuff[i + nextPx];
+      for (var x = 1; x < xlen - 1; x++){
+        var idx = thisRow + x,
+          pxTL = readBuff[prevRow + x - 1],
+          pxT = readBuff[prevRow + x],
+          pxTR = readBuff[prevRow + x + 1],
+          pxL = readBuff[idx - 1],
+          px = readBuff[idx],
+          pxR = readBuff[idx + 1],
+          pxBL = readBuff[nextRow + x - 1],
+          pxB = readBuff[nextRow + x],
+          pxBR = readBuff[nextRow + x + 1],
+          neighborCount = 0,
+          val = 0;
 
-      if (neighborCount === 3 || (px && neighborCount === 2)) {
-        val = 1;
+        neighborCount += pxTL+pxT+pxTR+pxL+pxR+pxBL+pxB+pxBR;
+
+        if (neighborCount === 3 || (px && neighborCount === 2)) {
+          val = 1;
+        }
+
+        writeBuff[idx] = val;
       }
-
-      writeBuff[i] = val;
     }
 
     if (this.countFPS){
@@ -73,7 +80,7 @@ const Game = {
 
       if (this.fps.length === this.fpsLen) {
         var ms = this.fps.reduce((a, b) => a + b, 0) / this.fpsLen;
-        console.log(`Last ${this.fpsLen} game updates averaged ${ms}ms, averaging ${Math.round(1000 / ms)} FPS`);
+        console.log(`${this.fpsLen} game updates average: ${ms}ms. FPS average: ${Math.floor(1000/ms)}`);
         this.fps = [];
       }
     }
