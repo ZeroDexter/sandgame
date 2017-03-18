@@ -1,0 +1,59 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf8">
+    <title>sandgame</title>
+    <style>
+      body {
+          margin: 0;
+          font-family: monospace;
+          overflow:hidden;
+      }
+      canvas {
+          display: block;
+          width: 100vw;
+          height: 100vh;
+      }
+      #b {
+        position: absolute;
+        top: 10px;
+        width: 100%;
+        text-align: center;
+        z-index: 2;
+      }
+    </style>
+    <script src="twgl-full.min.js"></script>
+    <script src="immutable.min.js"></script>
+    <script src="renderer.js"></script>
+    <script src="game.js"></script>
+    <script id="vs" type="nojs">
+attribute vec4 position; 
+
+void main() { 
+  gl_Position = position; 
+}
+    </script>
+    <script id="fs" type="nojs">
+precision mediump float;
+
+uniform sampler2D tex;
+uniform vec2 resolution;
+uniform float zoom;
+uniform vec2 pan;
+
+void main() {
+  vec2 dim = resolution * vec2(zoom, zoom);
+  vec2 uv = gl_FragCoord.xy / dim;
+  uv -= ((resolution - dim) * vec2(0.5, 0.5)) / dim;
+  uv += pan / dim;
+  float color = texture2D(tex, uv).r;
+
+  gl_FragColor = vec4(color, color, color, 255);
+}
+    </script>
+  </head>
+  <body>
+    <canvas id="c"></canvas>
+  </body>
+</html>

@@ -1,0 +1,22 @@
+{
+  "name": "sandgame",
+  "version": "0.0.1",
+  "description": "A sand game",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "keywords": [
+    "Sand"
+  ],
+  "devDependencies": {
+    "electron": "1.6.2",
+    "eslint": "eslint/eslint",
+    "esprima": "jquery/esprima",
+    "node-opencl": "mikeseven/node-opencl"
+  },
+  "cmake-js": {
+    "runtime": "electron",
+    "runtimeVersion": "1.6.2"
+  }
+}
